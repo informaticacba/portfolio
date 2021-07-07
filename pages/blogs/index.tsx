@@ -1,8 +1,7 @@
-import { GetStaticPropsResult } from "next";
+import { GetStaticProps } from "next";
 import React from "react";
 import BlogCard from "src/components/blogs/BlogCard";
 import Layout from "src/components/layouts/Layout";
-import aLittleMoreThumbnail from "../../src/assets/blog/a-little-more/thumbnail.jpg";
 import fs from "fs";
 import path from "path";
 import matter from "gray-matter";
@@ -44,32 +43,6 @@ const blogs: React.FC<Props> = ({ blogs }) => {
               tags={blog.data.tags.map((e: string) => ({ tag: e }))}
             />
           ))}
-
-          <BlogCard
-            image={aLittleMoreThumbnail}
-            date="May 3, 2021"
-            link="a-little-more"
-            title="A little bit more of who I am. My hobbies, education, sports, etc."
-            description="This blogs talks in depth more about my life, where I grew up, studied, the hobbies I do, the sports I play etc. Basically talking about not tech and coding stuff. Getting to know me in a personal level"
-            tags={[
-              { tag: "trivia" },
-              { tag: "get to know", classes: "bg-blue-500" },
-              { tag: "hobbies", classes: "bg-green-200" },
-            ]}
-          />
-
-          <BlogCard
-            image={aLittleMoreThumbnail}
-            date="May 3, 2021"
-            link="test"
-            title="Test"
-            description="Lorem ipsum dolor sit, amet consectetur adipisicing elit. At, voluptatem magnam? Quas illum architecto, dolor laborum deserunt similique sequi consectetur odit eveniet repellendus cumque, pariatur nemo, beatae velit nam totam."
-            tags={[
-              { tag: "trivia" },
-              { tag: "get to know", classes: "bg-blue-500" },
-              { tag: "hobbies", classes: "bg-green-200" },
-            ]}
-          />
         </div>
         <div className="h-24 md:h-32" />
       </div>
@@ -77,16 +50,14 @@ const blogs: React.FC<Props> = ({ blogs }) => {
   );
 };
 
-export async function getStaticProps(): Promise<GetStaticPropsResult<Props>> {
+export const getStaticProps: GetStaticProps<Props> = async () => {
   const files = fs.readdirSync(path.join("markdowns"));
 
   const blogs = files.map((name) => {
     const slug = name.replace(".md", "");
     const meta = fs.readFileSync(path.join("markdowns", name), "utf-8");
 
-    const { data, content, language, excerpt } = matter(meta);
-
-    console.log({ data, language, excerpt });
+    const { data, content } = matter(meta);
 
     return {
       slug,
@@ -100,6 +71,6 @@ export async function getStaticProps(): Promise<GetStaticPropsResult<Props>> {
       blogs,
     },
   };
-}
+};
 
 export default blogs;

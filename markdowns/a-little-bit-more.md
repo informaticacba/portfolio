@@ -9,8 +9,6 @@ tags:
   - "hobbies"
 ---
 
-# Hello World
-
 <p>
   Until now, trying to style an article, document, or blog post with Tailwind
   has been a tedious task that required a keen eye for typography and a lot of
@@ -30,7 +28,7 @@ The `@tailwindcss/typography` plugin is our attempt to give you what you _actual
 It adds a new `prose` class that you can slap on any block of vanilla HTML content and turn it into a beautiful, well-formatted document:
 
 ```html
-<article class="prose">
+<article>
   <h1>Garlic bread with cheese: What the science tells us</h1>
   <p>
     For years parents have espoused the health benefits of eating garlic bread

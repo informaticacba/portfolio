@@ -1,10 +1,12 @@
-import { GetStaticPropsResult } from "next";
+import { GetStaticPaths, GetStaticProps } from "next";
+import { ParsedUrlQuery } from "querystring";
 import React from "react";
 import BlogLayout from "src/components/layouts/BlogLayout";
 import dp from "../../src/assets/blog/dp.jpg";
 import fs from "fs";
 import path from "path";
 import matter from "gray-matter";
+import marked from "marked";
 
 interface Props {
   slug: string;
@@ -14,13 +16,17 @@ interface Props {
   content: string;
 }
 
-const slug: React.FC<Props> = ({ slug, data, content }) => {
+interface StaticProp extends ParsedUrlQuery {
+  slug: string;
+}
+
+const slug: React.FC<Props> = ({ content, data }) => {
   return (
     <BlogLayout seo={{ title: "A little more - Prince Carlo Juguilon" }}>
       <div className="flex flex-col w-full pt-16 lg:w-2/3">
-        <p className="text-sm text-gray-400">May 3, 2021 4:24pm PST</p>
+        <p className="text-sm text-gray-400">{data.date} PST</p>
 
-        <h1 className="mt-4 text-2xl font-bold md:text-3xl">{slug}</h1>
+        <h1 className="mt-4 text-2xl font-bold md:text-3xl">{data.title}</h1>
 
         <div className="flex items-center justify-start mt-8 space-x-2">
           <img
@@ -37,9 +43,10 @@ const slug: React.FC<Props> = ({ slug, data, content }) => {
 
         <div className="w-full h-px my-8 bg-gray-700" />
 
-        <article className="flex flex-col min-h-screen mt-4 space-y-4 font-serif">
-          {content}
-        </article>
+        <article
+          dangerouslySetInnerHTML={{ __html: marked(content) }}
+          className="mt-2 prose lg:prose-lg max-w-none prose-blue"
+        />
       </div>
 
       <div className="flex flex-col w-full pt-16 lg:w-1/3">
@@ -51,42 +58,32 @@ const slug: React.FC<Props> = ({ slug, data, content }) => {
   );
 };
 
-export async function getStaticPaths() {
+export const getStaticPaths: GetStaticPaths<StaticProp> = async () => {
   const files = fs.readdirSync(path.join("markdowns"));
 
   const paths = files.map((name) => ({
-    params: { slug: name.replace(".md", "") },
+    params: { slug: name.replace(".md", "") } as StaticProp,
   }));
-
-  console.log({ paths });
 
   return {
     paths,
     fallback: false,
   };
-}
+};
 
-export async function getStaticProps(): Promise<GetStaticPropsResult<Props>> {
-  const files = fs.readdirSync(path.join("markdowns"));
+export const getStaticProps: GetStaticProps<Props> = async ({ params }) => {
+  const { slug } = params as StaticProp;
 
-  const blogs = files.map((name) => {
-    const slug = name.replace(".md", "");
-    const meta = fs.readFileSync(path.join("markdowns", name), "utf-8");
-
-    const { data, content } = matter(meta);
-
-    return {
-      slug,
-      data,
-      content,
-    };
-  });
+  const meta = fs.readFileSync(path.join("markdowns", `${slug}.md`), "utf-8");
+  const { data, content } = matter(meta);
 
   return {
     props: {
-      ...blogs[0],
+      slug,
+      content,
+      data,
     },
   };
-}
+};
 
 export default slug;
