@@ -30,6 +30,19 @@ const blogs: React.FC = () => {
               { tag: "hobbies", classes: "bg-green-200" },
             ]}
           />
+
+          <BlogCard
+            image={aLittleMoreThumbnail}
+            date="May 3, 2021"
+            link="test"
+            title="Test"
+            description="Lorem ipsum dolor sit, amet consectetur adipisicing elit. At, voluptatem magnam? Quas illum architecto, dolor laborum deserunt similique sequi consectetur odit eveniet repellendus cumque, pariatur nemo, beatae velit nam totam."
+            tags={[
+              { tag: "trivia" },
+              { tag: "get to know", classes: "bg-blue-500" },
+              { tag: "hobbies", classes: "bg-green-200" },
+            ]}
+          />
         </div>
         <div className="h-24 md:h-32" />
       </div>
