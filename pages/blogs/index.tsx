@@ -1,9 +1,25 @@
+import { GetStaticPropsResult } from "next";
 import React from "react";
 import BlogCard from "src/components/blogs/BlogCard";
 import Layout from "src/components/layouts/Layout";
 import aLittleMoreThumbnail from "../../src/assets/blog/a-little-more/thumbnail.jpg";
+import fs from "fs";
+import path from "path";
+import matter from "gray-matter";
 
-const blogs: React.FC = () => {
+interface Item {
+  slug: string;
+  data: {
+    [key: string]: any;
+  };
+  content: string;
+}
+
+interface Props {
+  blogs: Item[];
+}
+
+const blogs: React.FC<Props> = ({ blogs }) => {
   return (
     <Layout
       seo={{
@@ -18,6 +34,17 @@ const blogs: React.FC = () => {
         </h1>
 
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          {blogs.map((blog) => (
+            <BlogCard
+              image={blog.data.cover_image}
+              date={blog.data.date}
+              title={blog.data.title}
+              description={blog.data.description}
+              link={blog.slug}
+              tags={blog.data.tags.map((e: string) => ({ tag: e }))}
+            />
+          ))}
+
           <BlogCard
             image={aLittleMoreThumbnail}
             date="May 3, 2021"
@@ -49,5 +76,30 @@ const blogs: React.FC = () => {
     </Layout>
   );
 };
+
+export async function getStaticProps(): Promise<GetStaticPropsResult<Props>> {
+  const files = fs.readdirSync(path.join("markdowns"));
+
+  const blogs = files.map((name) => {
+    const slug = name.replace(".md", "");
+    const meta = fs.readFileSync(path.join("markdowns", name), "utf-8");
+
+    const { data, content, language, excerpt } = matter(meta);
+
+    console.log({ data, language, excerpt });
+
+    return {
+      slug,
+      data,
+      content,
+    };
+  });
+
+  return {
+    props: {
+      blogs,
+    },
+  };
+}
 
 export default blogs;

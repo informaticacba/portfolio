@@ -1,10 +1,12 @@
 ---
-title: Markdown Title Test
-description: Describe this awesome content
+title: A little bit more of who I am. My hobbies, education, sports, etc.
+description: This blogs talks in depth more about my life, where I grew up, studied, the hobbies I do, the sports I play etc. Basically talking about not tech and coding stuff. Getting to know me in a personal level
+date: May 3, 2021
+cover_image: "/images/a-little-more/thumbnail.jpg"
 tags:
-  - "great"
-  - "awesome"
-  - "rad"
+  - "trivia"
+  - "get to know"
+  - "hobbies"
 ---
 
 # Hello World

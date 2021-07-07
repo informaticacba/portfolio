@@ -20,7 +20,7 @@ const BlogItem: React.FC<BlogItemProps> = ({
   date,
 }) => {
   return (
-    <Link href={`/blog/${link}`}>
+    <Link href={`/blogs/${link}`}>
       <a className="relative flex flex-col transition-all duration-300 ease-out rounded-md bg-red hover:bg-gray-800 focus:bg-gray-800">
         <div className="absolute inset-0 rounded-md opacity-50 hover:shadow-2xl bg-gradient-to-tr from-startpoint via-green-900 to-startpoint"></div>
 
