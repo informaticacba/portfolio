@@ -22,7 +22,28 @@ interface StaticProp extends ParsedUrlQuery {
 
 const slug: React.FC<Props> = ({ content, data }) => {
   return (
-    <BlogLayout seo={{ title: "A little more - Prince Carlo Juguilon" }}>
+    <BlogLayout
+      seo={{
+        title: data.title,
+        description: data.description,
+        openGraph: {
+          title: data.title,
+          description: data.description,
+          type: "website",
+          article: {
+            authors: ["Prince Carlo Juguilon"],
+            publishedTime: data.date,
+            tags: ["Trivia", "Get To Know", "Hobbies"],
+          },
+          images: [
+            {
+              url: data.cover_image,
+              alt: data.cover_image,
+            },
+          ],
+        },
+      }}
+    >
       <div className="flex flex-col w-full pt-16 lg:w-2/3">
         <p className="text-sm text-gray-400">{data.date} PST</p>
 
